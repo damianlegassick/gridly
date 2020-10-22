@@ -42,12 +42,12 @@
 %%% parts it contains. In this case we are initializing a grid with
 %%% four segments and three parts, namely "marks", "soprano" and "basso".
 \gridInit 4 #'("marks"
-               "soprano"
-               "basso")
+                "soprano"
+                "basso")
 
 %%% You can optionally specify the grid "template", that is, the
 %%% defaults for each section, that will be then applied to each
-%%% part. 
+%%% part.
 %%% The \gridSetSegmentTemplate command has the following interface:
 %%%
 %%%    \gridSetSegmentTemplate segment-index context-modifier music
@@ -63,7 +63,7 @@
 %%%                       `opening` and `closing` are snippets of music
 %%%                       that can be used to start or finish spanners
 %%%                       such as dynamics, beams or slurs etc.
-%%%                       These can serve to ensure correct results 
+%%%                       These can serve to ensure correct results
 %%%                       when compiling only parts of a score.
 %%%  * `music` is a music expression that defines the length of the
 %%%            segment. The duration specified here will be the one
@@ -119,7 +119,7 @@
 \with {
   lyrics = \lyricmode { Fa la }
   music = \relative c' {
-    e2 f |
+    e2 f | 
   }
 }
 
@@ -180,11 +180,12 @@
 
 \gridPutMusic "soprano" 4
 \with {
-  lyrics = \lyricmode {li le!}
-  music = \relative c'' {
-    g1 | c |
+  lyrics = \lyricmode {
+    li le!}
+    music = \relative c'' {
+      g1 | c |
+    }
   }
-}
 
 %%% Compiling single cells
 %%% ----------------------
@@ -193,14 +194,14 @@
 %%% This is a useful tool when working on large scores because it reduces
 %%% the time needed to wait for recompilation to the very small amount
 %%% that is necessary for the currently edited grid cell.
-%%% 
+%%%
 %%% \gridCompileCell part segment
 %%% will do that.
 %%%
 %%% The cell will be output to a file named
 %%% basename-part-segment.pdf
 %%% so you can even compile one or more cells along with the full score.
-\gridCompileCell "soprano" 2
+  \gridCompileCell "soprano" 2
 
 %%% Display the grid
 %%% ----------------
@@ -208,7 +209,7 @@
 %%% With the following command you can print the current grid state,
 %%% with `o` symbols marking entered segments and `-` symbols denoting
 %%% missing segments.
-\gridDisplay
+  \gridDisplay
 
 %%% Checking the grid contents
 %%% --------------------------
@@ -222,7 +223,7 @@
 %%% This check is completely optional, but it may produce more meaningful
 %%% warnings than the errors that LilyPond itself will give you when
 %%% there is something wrong with the grid contents.
-\gridCheck
+  \gridCheck
 
 %%% Music selection
 %%% ---------------
@@ -245,8 +246,8 @@
 %%%
 %%% Uncomment one of the following lines to see the effect:
 %%%
-%\gridSetRange #'(2 . 3)
-%\gridSetRange 2
+  %\gridSetRange #'(2 . 3)
+  %\gridSetRange 2
 
 %%% And now, let's see the functions that are used inside a score definition
 %%% to get the music out of the grid. These functions are
@@ -258,36 +259,35 @@
 %%%
 %%%  - `part` is the name of the part you want to get the music from
 
-\score {
+  \score {
 
-  \new StaffGroup <<
-    \new Staff <<
-      \new Voice { \gridGetMusic "marks" }
-      \new Voice = "soprano" { \gridGetMusic "soprano" }
-      \new Lyrics \lyricsto "soprano" { \gridGetLyrics "soprano" }
-    >>
-    \new Staff <<
-      \new Voice = "basso" { \gridGetMusic "basso" }
-      \new Lyrics \lyricsto "basso" { \gridGetLyrics "basso" }
-    >>
-    
-    \new Staff \new Voice {
-      \gridGetRange soprano 1
-      \transpose c c' {
-        $(gridGetRange "basso" 2)
+    \new StaffGroup <<
+      \new Staff <<
+        \new Voice { \gridGetMusic "marks" }
+        \new Voice = "soprano" { \gridGetMusic "soprano" }
+        \new Lyrics \lyricsto "soprano" { \gridGetLyrics "soprano" }
+      >>
+      \new Staff <<
+        \new Voice = "basso" { \gridGetMusic "basso" }
+        \new Lyrics \lyricsto "basso" { \gridGetLyrics "basso" }
+      >>
+
+      \new Staff \new Voice {
+        \gridGetRange soprano 1
+        \transpose c c' {
+          $(gridGetRange "basso" 2)
+        }
+        $(gridGetRange "soprano" 4)
+        $(gridGetRange "soprano" 3)
       }
-      $(gridGetRange "soprano" 4)
-      $(gridGetRange "soprano" 3)
-    }
-  
-  \new Staff \new Voice {
-    \gridGetRange "soprano" 1
-    \partcombine
+
+      \new Staff \new Voice {
+        \gridGetRange "soprano" 1
         $(gridGetRange "soprano" 2)
         \transpose c c' $(gridGetRange "basso" 2)
-  }
-  >>
+      }
+    >>
 
-  \layout{}
-  \midi{}
-}
+    \layout{}
+    \midi{}
+  }
